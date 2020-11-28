@@ -1,0 +1,6 @@
+comet-ml==3.2.6
+hydra-core==1.0.4
+numpy==1.19.4
+pytorch-lightning==1.0.8
+torch==1.7.0
+torchtext==0.8.0
