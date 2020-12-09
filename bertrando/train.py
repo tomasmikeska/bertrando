@@ -1,6 +1,5 @@
 import os
 import hydra
-# import multiprocessing
 import pytorch_lightning as pl
 from dotenv import load_dotenv
 from hydra.utils import to_absolute_path
@@ -10,7 +9,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from tokenizers import Tokenizer
 from tokenizers.processors import TemplateProcessing
-from bert import MLMPreTraining, BERT
+from networks.mlm import MLMPreTraining
+from networks.albert import ALBERT
 from dataset import LineByLineTextDataset, DataCollatorForMLM
 
 
@@ -31,21 +31,16 @@ def load_dataset(cfg, tokenizer):
 
 
 def get_data_loaders(cfg, tokenizer):
-    # num_workers = cfg.data_loader_workers or multiprocessing.cpu_count()
     train, val = load_dataset(cfg, tokenizer)
     data_collator = DataCollatorForMLM(tokenizer, max_seq_len=cfg.max_seq_len)
     train_loader = DataLoader(
         train,
         batch_size=cfg.train_batch_size,
-        # shuffle=True,
-        # num_workers=num_workers,
         collate_fn=data_collator
     )
     val_loader = DataLoader(
         val,
         batch_size=cfg.val_batch_size,
-        # shuffle=False,
-        # num_workers=num_workers,
         collate_fn=data_collator
     )
     return train_loader, val_loader
@@ -65,21 +60,22 @@ def find_lr(trainer, model, dataloader):
     print('Suggested_lr:', lr_finder.suggestion())
 
 
-@hydra.main(config_path='../configs/', config_name='bert')
+@hydra.main(config_path='../configs/', config_name='bert_base')
 def train(cfg):
     tokenizer = load_tokenizer(to_absolute_path(cfg.tokenizer_path))
     train_loader, val_loader = get_data_loaders(cfg, tokenizer)
     max_steps = cfg.max_epochs * len(train_loader)
 
-    bert = BERT(
+    bert = ALBERT(
         tokenizer.get_vocab_size(),
-        cfg.model.n_blocks,
-        cfg.model.n_heads,
-        cfg.model.d_model,
-        cfg.model.d_ff,
-        cfg.max_seq_len,
-        cfg.model.dropout,
-        tokenizer.token_to_id('[PAD]')
+        n_blocks=cfg.model.n_blocks,
+        n_heads=cfg.model.n_heads,
+        embedding_size=cfg.model.embedding_size,
+        d_model=cfg.model.d_model,
+        d_ff=cfg.model.d_ff,
+        max_seq_len=cfg.max_seq_len,
+        dropout=cfg.model.dropout,
+        padding_idx=tokenizer.token_to_id('[PAD]')
     )
     model = MLMPreTraining(bert, tokenizer.get_vocab_size(), cfg.model.d_model, n_training_steps=max_steps)
 

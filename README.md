@@ -1,4 +1,4 @@
-# Bumblebee Transformer
+# Bertrando: BERT Random Optimizations
 
 Experiments with efficient Transformers.
 
@@ -11,12 +11,12 @@ Experiments with efficient Transformers.
 
 Build Docker image
 ```
-$ docker build -t bumblebee .
+$ docker build -t bertrando .
 ```
 
 Run nvidia-docker image
 ```
-$ docker run -it -v $(pwd):/bumblebee --gpus all --ipc=host --runtime=nvidia bumblebee bash
+$ docker run -it -v $(pwd):/bertrando --gpus all --ipc=host --runtime=nvidia bertrando bash
 ```
 
 ### Usage
@@ -24,7 +24,12 @@ $ docker run -it -v $(pwd):/bumblebee --gpus all --ipc=host --runtime=nvidia bum
 Training pipeline is configured using Hydra config files present in `configs/`. All options in config file
 can be overwritten using command-line arguments. (Hydra docs: https://hydra.cc/docs/intro)
 
+Train tokenizer
+```
+$ python bertrando/tokenizers/wordpiece.py --dataset_path data/train.txt
+```
+
 Train model
 ```
-$ python src/train.py
+$ python bertrando/train.py
 ```

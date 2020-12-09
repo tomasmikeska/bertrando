@@ -1,0 +1,39 @@
+# Hyperparameters
+max_epochs: 1
+train_batch_size: 256
+val_batch_size: ${train_batch_size}
+learning_rate: 5e-5
+
+# Dataset
+dataset_path: data/train.txt
+val_dataset_path: data/val.txt
+tokenizer_path: data/cs_tokenizer/tokenizer.json
+max_seq_len: 128
+
+# Model
+model:
+    n_blocks: 8
+    n_heads: 8
+    d_model: 256
+    d_ff: 1024
+    dropout: 0.2
+
+# Training
+val_check_interval: 0.05
+gpus: 1
+precision: 16
+early_stopping_monitor: val_mlm_loss
+early_stopping_delta: 0
+early_stopping_patience: 20
+early_stopping_mode: 'min'
+
+# Checkpointing
+checkpoint:
+    save_top_k: 3
+    monitor: val_mlm_loss
+    mode: min
+
+# Logging
+logs:
+    path: logs/
+    use_comet: True

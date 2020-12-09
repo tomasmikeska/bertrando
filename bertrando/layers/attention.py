@@ -40,16 +40,3 @@ class MultiHeadedAttention(nn.Module):
         # "Concat" using a view and apply a final linear.
         x = x.transpose(1, 2).contiguous().view(batch_size, -1, self.n_heads * self.d_k)
         return self.final_proj(x)
-
-    def simple_forward(self, x):
-        # Do all the linear projections in batch from d_model => h x d_k
-        query = self.query_layer(x)
-        key = self.key_layer(x)
-        value = self.value_layer(x)
-
-        # Apply attention on all the projected vectors in batch.
-        x = self.self_attention(query, key, value)
-
-        # "Concat" using a view and apply a final linear.
-        x = x.contiguous()
-        return self.final_proj(x)

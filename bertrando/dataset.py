@@ -2,18 +2,16 @@ import torch
 from torch.utils.data import IterableDataset
 
 
-MIN_LINE_LENGTH = 2
-
-
 class LineByLineTextDataset(IterableDataset):
 
-    def __init__(self, dataset_path, tokenizer):
+    def __init__(self, dataset_path, tokenizer, min_line_length=2):
         self.dataset_path = dataset_path
         self.tokenizer = tokenizer
         self.dataset_len = self._compute_num_lines()
+        self.min_line_length = min_line_length
 
     def _is_line_accepted(self, line):
-        return len(line.split()) >= MIN_LINE_LENGTH
+        return len(line.split()) >= self.min_line_length
 
     def _compute_num_lines(self):
         count = 0

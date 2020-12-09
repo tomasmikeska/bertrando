@@ -1,9 +1,8 @@
 # Hyperparameters
 max_epochs: 1
-train_batch_size: 64
+train_batch_size: 128
 val_batch_size: ${train_batch_size}
 learning_rate: 5e-5
-# learning_rate: 2e-3
 
 # Dataset
 dataset_path: data/train.txt
@@ -13,20 +12,19 @@ max_seq_len: 128
 
 # Model
 model:
-    n_blocks: 8
-    n_heads: 4
-    d_model: 256
-    d_ff: 1024
+    n_blocks: 12
+    n_heads: 8
+    d_model: 512
+    d_ff: 2048
     dropout: 0.2
 
 # Training
-val_check_interval: 0.1
+val_check_interval: 0.05
 gpus: 1
 precision: 16
-data_loader_workers: 0  # null == Set to max CPU cores
 early_stopping_monitor: val_mlm_loss
 early_stopping_delta: 0
-early_stopping_patience: 10
+early_stopping_patience: 20
 early_stopping_mode: 'min'
 
 # Checkpointing

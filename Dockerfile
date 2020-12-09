@@ -12,8 +12,8 @@ RUN apt-get update && \
 # Copy files and set workdir
 # --------------------------------------------------------------------
 
-COPY . /bumblebee/
-WORKDIR /bumblebee
+COPY . /bertrando/
+WORKDIR /bertrando
 
 # --------------------------------------------------------------------
 # PyPI packages

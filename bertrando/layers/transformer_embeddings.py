@@ -32,3 +32,23 @@ class LearnedPositionalEmbedding(nn.Module):
     def forward(self, x):
         position_ids = self.position_ids[:, :x.size()[1]]
         return self.embedding(position_ids)
+
+
+class TransformerEmbedding(nn.Module):
+
+    def __init__(self, n_vocab, embedding_size, dropout=0.2, n_segment_vocab=2, padding_idx=None):
+        super(TransformerEmbedding, self).__init__()
+        self.token_embedding = nn.Embedding(n_vocab, embedding_size, padding_idx=padding_idx)
+        self.positional_embedding = LearnedPositionalEmbedding(embedding_size)
+        self.segment_embedding = nn.Embedding(n_segment_vocab, embedding_size)
+        self.embedding_norm = nn.LayerNorm(embedding_size)
+        self.embedding_dropout = nn.Dropout(p=dropout)
+
+    def forward(self, x, segments=None):
+        x = self.token_embedding(x)
+        x += self.positional_embedding(x)
+        if segments is not None:
+            x += self.segment_embedding(segments)
+        x = self.embedding_norm(x)
+        x = self.embedding_dropout(x)
+        return x
