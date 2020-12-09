@@ -10,7 +10,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from tokenizers import Tokenizer
 from tokenizers.processors import TemplateProcessing
 from networks.mlm import MLMPreTraining
-from networks.albert import ALBERT
+from networks.bertrando import Bertrando
 from dataset import LineByLineTextDataset, DataCollatorForMLM
 
 
@@ -66,7 +66,7 @@ def train(cfg):
     train_loader, val_loader = get_data_loaders(cfg, tokenizer)
     max_steps = cfg.max_epochs * len(train_loader)
 
-    bert = ALBERT(
+    bert = Bertrando(
         tokenizer.get_vocab_size(),
         n_blocks=cfg.model.n_blocks,
         n_heads=cfg.model.n_heads,

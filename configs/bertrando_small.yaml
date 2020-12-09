@@ -20,7 +20,7 @@ model:
     dropout: 0.1
 
 # Training
-val_check_interval: 0.05
+val_check_interval: 0.025
 gpus: 1
 precision: 16
 early_stopping_monitor: val_mlm_loss
