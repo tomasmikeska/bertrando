@@ -7,8 +7,8 @@ class LineByLineTextDataset(IterableDataset):
     def __init__(self, dataset_path, tokenizer, min_line_length=2):
         self.dataset_path = dataset_path
         self.tokenizer = tokenizer
-        self.dataset_len = self._compute_num_lines()
         self.min_line_length = min_line_length
+        self.dataset_len = self._compute_num_lines()
 
     def _is_line_accepted(self, line):
         return len(line.split()) >= self.min_line_length
@@ -75,13 +75,11 @@ class DataCollatorForMLM:
         special_tokens_mask = batch['special_tokens_mask'].bool()
 
         masked_input = original_tokens.clone()
-        labels = original_tokens.clone()
         # We sample a few tokens in each sequence for MLM training (with probability `self.mlm_probability`)
         probability_matrix = torch.full(masked_input.shape, self.mlm_probability)
 
         probability_matrix.masked_fill_(special_tokens_mask, value=0.0)
         masked_indices = torch.bernoulli(probability_matrix).bool()
-        labels[(~masked_indices)] = -100
 
         # 80% of the time, replace masked input tokens with mask_token ([MASK])
         indices_replaced = torch.bernoulli(torch.full(masked_input.shape, 0.8)).bool() & masked_indices

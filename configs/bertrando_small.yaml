@@ -7,16 +7,17 @@ learning_rate: 5e-5
 # Dataset
 dataset_path: data/train.txt
 val_dataset_path: data/val.txt
-tokenizer_path: data/cs_tokenizer/tokenizer.json
+tokenizer_path: data/tokenizer/tokenizer.json
 max_seq_len: 128
 
 # Model
 model:
-    n_blocks: 12
-    n_heads: 8
+    n_blocks: 8
+    n_heads: 16
+    embedding_size: 128
     d_model: 512
     d_ff: 2048
-    dropout: 0.2
+    dropout: 0.1
 
 # Training
 val_check_interval: 0.05
@@ -37,3 +38,4 @@ checkpoint:
 logs:
     path: logs/
     use_comet: True
+    log_every_n_steps: 250

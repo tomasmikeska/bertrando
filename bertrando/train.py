@@ -60,7 +60,7 @@ def find_lr(trainer, model, dataloader):
     print('Suggested_lr:', lr_finder.suggestion())
 
 
-@hydra.main(config_path='../configs/', config_name='bert_base')
+@hydra.main(config_path='../configs/', config_name='bertrando_small')
 def train(cfg):
     tokenizer = load_tokenizer(to_absolute_path(cfg.tokenizer_path))
     train_loader, val_loader = get_data_loaders(cfg, tokenizer)
@@ -104,6 +104,7 @@ def train(cfg):
         precision=cfg.precision,
         terminate_on_nan=True,
         logger=logger,
+        log_every_n_steps=cfg.logs.log_every_n_steps,
         callbacks=[checkpoint_callback, early_stop_callback]
     )
     # find_lr(trainer, model, train_loader)
