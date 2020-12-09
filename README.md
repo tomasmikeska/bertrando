@@ -1,4 +1,4 @@
-# Bertrando: BERT Random Optimizations
+# Bertrando
 
 Experiments with efficient Transformers.
 
