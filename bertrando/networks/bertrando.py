@@ -8,10 +8,10 @@ class Bertrando(nn.Module):
     def __init__(self,
                  n_vocab,
                  n_blocks=12,
-                 n_heads=8,
+                 n_heads=16,
                  embedding_size=128,
-                 d_model=4096,
-                 d_ff=2048,
+                 d_model=1024,
+                 d_ff=4096,
                  max_seq_len=256,
                  dropout=0.1,
                  padding_idx=None):

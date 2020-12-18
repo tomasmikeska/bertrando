@@ -11,7 +11,7 @@ class MLMPreTraining(pl.LightningModule):
                  n_vocab,
                  d_model,
                  learning_rate=1e-4,
-                 n_warmup_steps=1e4,
+                 n_warmup_steps=0,
                  n_training_steps=1e6):
         super(MLMPreTraining, self).__init__()
         self.model = model
@@ -67,4 +67,4 @@ class MLMPreTraining(pl.LightningModule):
         return {'optimizer': optimizer, 'lr_scheduler': lr_scheduler}
 
     def __str__(self):
-        return 'bert-mlm'
+        return 'mlm'

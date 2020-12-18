@@ -5,6 +5,7 @@ from torch.utils.data import IterableDataset
 class LineByLineTextDataset(IterableDataset):
 
     def __init__(self, dataset_path, tokenizer, min_line_length=2):
+        super(LineByLineTextDataset, self).__init__()
         self.dataset_path = dataset_path
         self.tokenizer = tokenizer
         self.min_line_length = min_line_length
@@ -47,8 +48,6 @@ class DataCollatorForMLM:
         self.mask_token = mask_token
         self.n_reserved_tokens = n_reserved_tokens
 
-        self.batch = None
-
     def __call__(self, examples):
         self._pad(examples)
         batch = self._batchify(examples)
@@ -62,9 +61,9 @@ class DataCollatorForMLM:
 
     def _batchify(self, examples):
         return {
-            'original_input': torch.stack([torch.tensor(x.ids) for x in examples]),
-            'segment': torch.stack([torch.tensor(x.type_ids) for x in examples]),
-            'special_tokens_mask': torch.stack([torch.tensor(x.special_tokens_mask) for x in examples])
+            'original_input': torch.tensor([x.ids for x in examples]),
+            'segment': torch.tensor([x.type_ids for x in examples]),
+            'special_tokens_mask': torch.tensor([x.special_tokens_mask for x in examples])
         }
 
     def _mask_tokens(self, batch):

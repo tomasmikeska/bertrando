@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from layers.layer_norm import LayerNorm
 
@@ -16,11 +17,16 @@ class MLMLossHead(nn.Module):
         )
         self.loss_fn = nn.CrossEntropyLoss()
 
-    def forward(self, x, labels, mask):
+    def forward(self, x, labels, mask, return_logits=False):
         masked_x = x.masked_select(mask.unsqueeze(-1)).view(-1, self.d_model)
-        y = self.cls(masked_x)
+        x_hat = self.cls(masked_x)
 
-        return self.loss_fn(
-            y.view(-1, self.n_vocab),
+        loss = self.loss_fn(
+            x_hat.view(-1, self.n_vocab),
             labels.masked_select(mask).view(-1)
         )
+
+        if return_logits:
+            return loss, x_hat
+        else:
+            return loss

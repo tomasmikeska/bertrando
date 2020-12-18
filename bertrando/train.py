@@ -11,7 +11,7 @@ from tokenizers import Tokenizer
 from tokenizers.processors import TemplateProcessing
 from networks.mlm import MLMPreTraining
 from networks.bertrando import Bertrando
-from dataset import LineByLineTextDataset, DataCollatorForMLM
+from datasets.mlm_dataset import LineByLineTextDataset, DataCollatorForMLM
 
 
 def load_tokenizer(tokenizer_path):
@@ -66,7 +66,7 @@ def train(cfg):
     train_loader, val_loader = get_data_loaders(cfg, tokenizer)
     max_steps = cfg.max_epochs * len(train_loader)
 
-    bert = Bertrando(
+    backbone = Bertrando(
         tokenizer.get_vocab_size(),
         n_blocks=cfg.model.n_blocks,
         n_heads=cfg.model.n_heads,
@@ -77,10 +77,11 @@ def train(cfg):
         dropout=cfg.model.dropout,
         padding_idx=tokenizer.token_to_id('[PAD]')
     )
-    model = MLMPreTraining(bert, tokenizer.get_vocab_size(), cfg.model.d_model, n_training_steps=max_steps)
+    model = MLMPreTraining(backbone, tokenizer.get_vocab_size(), cfg.model.d_model, n_training_steps=max_steps)
 
     comet_logger = load_comet_logger(cfg) if cfg.logs.use_comet else None
     logger = comet_logger or TensorBoardLogger(to_absolute_path(cfg.logs.path))
+    logger.log_hyperparams(cfg)
 
     checkpoint_callback = ModelCheckpoint(
         monitor=cfg.checkpoint.monitor,
