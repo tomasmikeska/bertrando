@@ -1,6 +1,10 @@
 # Bertrando
 
-Experiments with efficient Transformers.
+WIP - Experiments with efficient Transformers. Current implementation contains:
+- ALBERT cross-layer sharing (https://arxiv.org/abs/1909.11942)
+- Factorized embedding parametrization
+- ScaleNorm normalization (https://arxiv.org/abs/1910.05895)
+- Gated Linear Unit alternative for FFN (https://arxiv.org/abs/2002.05202)
 
 ### Requirements
 
