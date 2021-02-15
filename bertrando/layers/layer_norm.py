@@ -14,3 +14,15 @@ class LayerNorm(nn.Module):
         mean = x.mean(-1, keepdim=True)
         std = x.std(-1, keepdim=True)
         return self.a_2 * (x - mean) / (std + self.eps) + self.b_2
+
+
+class ScaleNorm(nn.Module):
+
+    def __init__(self, d_model, eps=1e-5):
+        super(ScaleNorm, self).__init__()
+        self.scale = nn.Parameter(torch.tensor(d_model ** 0.5))
+        self.eps = eps
+
+    def forward(self, x):
+        norm = self.scale / torch.norm(x, dim=-1, keepdim=True).clamp(min=self.eps)
+        return x * norm
