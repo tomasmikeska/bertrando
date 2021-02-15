@@ -110,6 +110,7 @@ bin/
 include/
 outputs/
 model/*
+checkpoints/
 data/*
 models/*
 tb_logs/
